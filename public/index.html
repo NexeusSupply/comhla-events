@@ -1,0 +1,952 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Comhla Events</title>
+<link rel="icon" href="/favicon.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: app bar with view tabs, filter row, one working view below; detail and forms open as a side sheet. */
+:root{
+  --bg:#f3f5f1; --surface:#ffffff; --sunk:#e9ede6; --ink:#1b2620; --muted:#5b6a61; --line:#d7ded5;
+  --accent:#1e6a55; --accent-ink:#ffffff; --accent-soft:#dcebe4; --danger:#b42318; --danger-soft:#fbe4e1;
+  --today:#f2e7c9;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --r:8px;
+  --brand:#1e6a55; --brand-ink:#ffffff;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111713; --surface:#18201b; --sunk:#202a24; --ink:#e4ebe6; --muted:#97a69d; --line:#2d3a33;
+  --accent:#5fc2a2; --accent-ink:#0d1a14; --accent-soft:#1f3a30; --danger:#f97066; --danger-soft:#3a1d1a;
+  --today:#3a3320; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#111713; --surface:#18201b; --sunk:#202a24; --ink:#e4ebe6; --muted:#97a69d; --line:#2d3a33;
+  --accent:#5fc2a2; --accent-ink:#0d1a14; --accent-soft:#1f3a30; --danger:#f97066; --danger-soft:#3a1d1a;
+  --today:#3a3320; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 var(--body)}
+.wrap{max-width:1280px;margin:0 auto;padding-inline:16px;padding-block:0 48px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:-.01em}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* app bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1280px;margin:0 auto;padding:12px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px}
+.bar::before{content:"";display:block;height:4px;background:var(--brand)}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{height:34px;width:auto;max-width:150px;object-fit:contain}
+.brand .word{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.02em;color:var(--brand)}
+.brand .sep{width:1px;height:26px;background:var(--line)}
+.brand h1{font-size:18px;font-weight:600}
+.blogo{height:18px;width:auto;max-width:56px;object-fit:contain;vertical-align:middle}
+.bmark{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:18px;padding:0 4px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:.03em;color:#fff;background:var(--c,var(--muted))}
+.bchip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:2px 8px 2px 3px;border-radius:999px;border:1px solid var(--line);background:var(--surface);white-space:nowrap}
+.card .logo{height:44px;display:flex;align-items:center}
+.card .logo img{max-height:44px;max-width:180px;object-fit:contain}
+.card .logo .bmark{height:36px;min-width:44px;font-size:15px;border-radius:6px}
+.stats{display:flex;gap:18px;flex-wrap:wrap}
+.stats div{display:flex;flex-direction:column}
+.stats b{font-family:var(--mono);font-size:20px;font-weight:500}
+.stats span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.upload{display:flex;gap:10px;align-items:center;flex-wrap:wrap;grid-column:1/-1}
+.upload img{max-height:48px;max-width:160px;object-fit:contain;background:var(--sunk);padding:4px;border-radius:4px}
+.tabs{display:flex;gap:2px;flex-wrap:wrap;background:var(--sunk);padding:3px;border-radius:var(--r)}
+.tabs button{border:0;background:none;padding:6px 12px;border-radius:6px;color:var(--muted);font-weight:500}
+.tabs button[aria-current="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgb(0 0 0 / .08)}
+.bar .spacer{flex:1}
+.btn{border:1px solid var(--line);background:var(--surface);padding:7px 12px;border-radius:var(--r);font-weight:500;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.btn.ghost{border-color:transparent;background:none}
+.btn.danger{color:var(--danger)}
+.btn.danger.armed{background:var(--danger);border-color:var(--danger);color:var(--surface)}
+.btn.sm{padding:4px 9px;font-size:13px}
+
+/* filters */
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-block:14px}
+.filters input,.filters select{border:1px solid var(--line);background:var(--surface);border-radius:var(--r);padding:6px 10px;min-width:0}
+.filters input{flex:1 1 200px;max-width:320px}
+.filters .count{color:var(--muted);font-size:13px;margin-left:auto}
+.mode{font-size:12px;color:var(--muted);padding:8px 12px;border:1px dashed var(--line);border-radius:var(--r);margin-top:12px}
+
+/* type chips */
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:2px 8px;border-radius:999px;background:var(--sunk);color:var(--ink);white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;flex:none;background:var(--c,var(--muted))}
+.pill{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:4px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.pill.Confirmed{color:var(--accent);border-color:var(--accent)}
+.pill.Completed{background:var(--sunk)}
+.pill.Cancelled{text-decoration:line-through}
+.pill.Idea{border-style:dashed}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin-top:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+
+/* calendar */
+.calhead{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px}
+.calhead h2{font-size:26px;min-width:220px}
+.context{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;align-items:center}
+.context .lbl{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.band{font-size:12px;padding:3px 9px;border-radius:4px;background:var(--sunk);border-left:3px solid var(--c,var(--muted))}
+.calscroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(108px,1fr));min-width:756px}
+.cal .dow{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--line)}
+.day{min-height:112px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:4px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.day:nth-child(7n){border-right:0}
+.day.out{background:var(--sunk)}
+.day.out .dn{opacity:.5}
+.day.today .dn{background:var(--today);border-radius:4px}
+.dn{font-family:var(--mono);font-size:12px;color:var(--muted);padding:1px 4px;align-self:flex-start;display:flex;gap:6px;align-items:center}
+.dn button{border:0;background:none;color:var(--muted);padding:0 4px;opacity:0;font-size:14px;line-height:1}
+.day:hover .dn button,.dn button:focus-visible{opacity:1}
+.ev{border:0;text-align:left;font-size:12px;line-height:1.3;padding:3px 6px;border-radius:4px;background:color-mix(in srgb,var(--c) 16%,var(--surface));border-left:3px solid var(--c);color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%}
+.ev:hover{background:color-mix(in srgb,var(--c) 28%,var(--surface))}
+.ev.cont{opacity:.7}
+.ev.Cancelled{text-decoration:line-through;opacity:.55}
+
+/* year planner */
+.yscroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.year{display:grid;grid-template-columns:minmax(180px,220px) repeat(12,minmax(56px,1fr));min-width:900px;font-size:12px}
+.year > div{border-bottom:1px solid var(--line);padding:5px 6px;min-width:0}
+.year .mh{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:center;cursor:pointer}
+.year .mh:hover{color:var(--accent)}
+.year .sec{grid-column:1/-1;background:var(--sunk);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+.year .rl{display:flex;align-items:center;gap:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.year .rl button{border:0;background:none;padding:0;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.year .rl button:hover{color:var(--accent);text-decoration:underline}
+.yb{padding:5px 0!important}
+.yb i{display:block;height:14px;background:color-mix(in srgb,var(--c) 55%,transparent)}
+.yb i.s{border-radius:7px 0 0 7px}.yb i.e{border-radius:0 7px 7px 0}.yb i.s.e{border-radius:7px}
+.yc{text-align:center;font-family:var(--mono)}
+.yc button{border:0;background:color-mix(in srgb,var(--c) 18%,transparent);border-radius:4px;min-width:26px;padding:1px 6px}
+.yc button:hover{background:color-mix(in srgb,var(--c) 34%,transparent)}
+
+/* list */
+.list{display:flex;flex-direction:column;gap:18px}
+.mgroup h3{font-size:15px;margin-bottom:6px;color:var(--muted);font-weight:600}
+.rows{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.row{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:4px 16px;padding:10px 14px;border-bottom:1px solid var(--line);cursor:pointer;align-items:center}
+.row:last-child{border-bottom:0}
+.row:hover{background:var(--sunk)}
+.row .when{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.row .t{font-weight:600}
+.row .meta{font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:2px}
+.row .right{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+@media (max-width:640px){.row{grid-template-columns:1fr}.row .right{justify-content:flex-start}}
+
+/* cards (programmes / products) */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card h3{font-size:18px;display:flex;align-items:center;gap:8px}
+.card .sub{font-size:12px;color:var(--muted)}
+.card p{margin:0;color:var(--muted)}
+.card ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:2px}
+.card li button{border:0;background:none;padding:2px 0;text-align:left;width:100%;display:flex;gap:8px;align-items:center}
+.card li button:hover .lt{text-decoration:underline}
+.card .lt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+.k{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);padding:28px;text-align:center;color:var(--muted)}
+.empty strong{display:block;color:var(--ink);font-family:var(--display);font-size:18px;margin-bottom:4px}
+.sechead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.sechead h2{font-size:24px}
+.sechead p{margin:2px 0 0;color:var(--muted);max-width:65ch}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgb(10 20 15 / .38);z-index:20;display:flex;justify-content:flex-end}
+.sheet{background:var(--surface);width:min(640px,100%);height:100%;overflow-y:auto;padding:20px 22px calc(28px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px;border-left:1px solid var(--line)}
+.sheet-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.sheet h2{font-size:24px;line-height:1.15}
+.facts{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px 18px}
+.facts div{min-width:0}
+.facts .v{overflow-wrap:anywhere}
+.lvl{display:flex;gap:2px;background:var(--sunk);padding:3px;border-radius:var(--r);align-self:flex-start}
+.lvl button{border:0;background:none;padding:5px 12px;border-radius:6px;color:var(--muted);font-weight:500}
+.lvl button[aria-current="true"]{background:var(--surface);color:var(--ink)}
+.txt{white-space:pre-wrap;margin:2px 0 0;overflow-wrap:anywhere}
+.none{color:var(--muted);font-style:italic}
+.block{display:flex;flex-direction:column;gap:2px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.sheet .acts{display:flex;flex-wrap:wrap;gap:8px;border-top:1px solid var(--line);padding-top:14px;margin-top:auto}
+
+/* forms */
+form{display:flex;flex-direction:column;gap:16px}
+fieldset{border:1px solid var(--line);border-radius:var(--r);padding:12px 14px 14px;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
+legend{font-family:var(--display);font-weight:600;padding:0 6px;font-size:15px}
+legend small{font-family:var(--body);font-weight:400;color:var(--muted);font-size:12px;margin-left:6px}
+label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted);font-weight:500;min-width:0}
+label.full{grid-column:1/-1}
+label input,label select,label textarea{border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:7px 9px;color:var(--ink);font-size:14px;width:100%}
+label textarea{min-height:72px;resize:vertical}
+.checks{grid-column:1/-1;display:flex;flex-direction:column;gap:4px}
+.checks .opts{display:flex;flex-wrap:wrap;gap:6px}
+.checks .opts label{flex-direction:row;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--ink);font-weight:400;cursor:pointer}
+.checks .opts label:has(input:checked){background:var(--accent-soft);border-color:var(--accent)}
+.checks .opts input{width:auto;margin:0}
+@media (max-width:520px){fieldset{grid-template-columns:1fr}}
+
+.btiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.btiles label{flex-direction:row;align-items:center;gap:8px;border:1px solid var(--line);border-radius:6px;padding:5px 8px;color:var(--ink);font-weight:400;cursor:pointer;background:var(--bg);min-width:0}
+.btiles label span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btiles label:has(input:checked){background:var(--accent-soft);border-color:var(--accent)}
+.btiles input{position:absolute;opacity:0;width:1px;height:1px}
+.btiles label:has(input:focus-visible){outline:2px solid var(--accent)}
+.btiles .blogo{height:24px;max-width:48px}
+.who{grid-column:1/-1;font-size:13px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:var(--r);z-index:40;font-size:13px;max-width:calc(100% - 32px)}
+.sample{font-size:10px;letter-spacing:.06em;text-transform:uppercase;border:1px dashed var(--muted);color:var(--muted);border-radius:3px;padding:0 4px}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:slide .18s ease-out}@keyframes slide{from{transform:translateX(24px);opacity:.6}}}
+</style>
+
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <div class="brand" id="brandmark"><span class="word">Comhla</span><span class="sep"></span><h1>Events</h1></div>
+  <nav class="tabs" id="tabs" aria-label="Views"></nav>
+  <span class="spacer"></span>
+  <button class="btn primary" data-act="new-event" id="newBtn">+ New event</button>
+</div></header>
+<main class="wrap">
+  <div class="filters" id="filters"></div>
+  <div id="view"><div class="empty"><strong>Loading events…</strong>Connecting to the shared event store.</div></div>
+  <div class="mode" id="mode" hidden></div>
+</main>
+<div id="sheet"></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(() => {
+const TYPES = [
+  {id:'ap', name:'A&P show', c:'#c2571d'},
+  {id:'trade', name:'Trade show', c:'#7a4fd1'},
+  {id:'clinic', name:'In-clinic event', c:'#0e8a7d'},
+  {id:'training', name:'Staff training', c:'#2f6fd6'},
+  {id:'conference', name:'Conference', c:'#c08a12'},
+  {id:'internal', name:'Internal conference', c:'#c23d7a'},
+  {id:'roadshow', name:'Roadshow', c:'#5e8f1e'},
+  {id:'sponsorship', name:'Sponsorship', c:'#8a5a3c'},
+  {id:'other', name:'Other', c:'#7b8a84'},
+];
+const TYPE = Object.fromEntries(TYPES.map(t => [t.id, t]));
+const STATUSES = ['Idea','Planned','Confirmed','Completed','Cancelled'];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MON = MONTHS.map(m => m.slice(0,3));
+const SWATCH = ['#1e6a55','#c2571d','#2f6fd6','#7a4fd1','#c08a12','#c23d7a','#5e8f1e','#0e8a7d','#8a5a3c','#7b8a84'];
+const COLLS = ['events','programmes','products','seasons','brands'];
+
+const S = {events:[], programmes:[], products:[], seasons:[], brands:[]};
+const now = new Date();
+const ui = { view:'calendar', y:now.getFullYear(), m:now.getMonth(), q:'', type:'', prog:'', season:'', status:'', brand:'', sheet:null, lvl:'summary', armed:null };
+try { const v = localStorage.getItem('ce.view'); if (v) ui.view = v; } catch {}
+
+let me = {id:null, name:''}, mode = 'loading', version = '', assets = true, user = null;
+let people = {};
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => String(n).padStart(2,'0');
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const today = iso(now);
+const parse = s => { const [y,m,d] = String(s).split('-').map(Number); return new Date(y, m-1, d); };
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const fmt = s => { if (!s) return ''; const d = parse(s); return `${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()}`; };
+const fmtRange = (a,b) => {
+  if (!a) return 'Date to be set';
+  if (!b || b === a) return fmt(a);
+  const A = parse(a), B = parse(b);
+  if (A.getFullYear() === B.getFullYear() && A.getMonth() === B.getMonth()) return `${A.getDate()}–${B.getDate()} ${MON[B.getMonth()]} ${B.getFullYear()}`;
+  return `${fmt(a)} – ${fmt(b)}`;
+};
+const endOf = e => e.end && e.end >= e.start ? e.end : e.start;
+const byId = (coll, id) => S[coll].find(x => x.id === id);
+const names = (coll, ids, key='name') => (ids||[]).map(id => byId(coll,id)).filter(Boolean).map(x => x[key]);
+const typeChip = t => { const T = TYPE[t] || TYPE.other; return `<span class="chip"><span class="dot" style="--c:${T.c}"></span>${esc(T.name)}</span>`; };
+const logoUrl = b => (b && (b.logoUrl || b.logoData)) || '';
+const initials = n => { const w = String(n||'?').split(/\s+/).filter(Boolean); return (w.length > 1 ? w.slice(0,2).map(x => x[0]).join('') : (w[0]||'?').slice(0,2)).toUpperCase(); };
+const bmark = b => logoUrl(b) ? `<img class="blogo" src="${esc(logoUrl(b))}" alt="${esc(b.name)}">` : `<span class="bmark" style="--c:${esc(b.colour||'#7b8a84')}">${esc(initials(b.name))}</span>`;
+const brandChips = ids => (ids||[]).map(id => byId('brands',id)).filter(Boolean).map(b => `<span class="bchip">${bmark(b)}${esc(b.name)}</span>`).join('');
+const sortedBrands = () => S.brands.slice().sort((a,b) => (b.primary?1:0)-(a.primary?1:0) || (a.name||'').localeCompare(b.name||''));
+const primaryBrand = () => S.brands.find(b => b.primary);
+function applyBrand(){
+  const p = primaryBrand(), root = document.documentElement;
+  if (p && p.colour) root.style.setProperty('--brand', p.colour); else root.style.removeProperty('--brand');
+  const host = $('#brandmark'), url = logoUrl(p);
+  const want = url ? `<img src="${esc(url)}" alt="${esc(p.name)}"><span class="sep"></span><h1>Events</h1>` : `<span class="word">${esc(p ? p.name : 'Comhla')}</span><span class="sep"></span><h1>Events</h1>`;
+  if (host.dataset.v !== want){ host.innerHTML = want; host.dataset.v = want; }
+}
+const isSample = x => x && x.sample;
+const sampleTag = x => isSample(x) ? ' <span class="sample">example</span>' : '';
+let peopleTimer;
+function resolvePeople(){}
+const personName = id => id ? (id === 'local' || id === 'preview' ? 'a team member' : id) : '';
+const enteredBy = e => e.createdBy ? personName(e.createdBy) : (e.enteredBy || (e.source ? 'Imported from ' + e.source : ''));
+const slug = s => String(s||'item').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,50) || 'item';
+
+function seasonActive(s, m1){ // m1: 1-12
+  const a = +s.startMonth, b = +s.endMonth;
+  if (!a || !b) return false;
+  return a <= b ? (m1 >= a && m1 <= b) : (m1 >= a || m1 <= b);
+}
+function overlapsMonth(start, end, y, m){
+  if (!start) return false;
+  const ms = `${y}-${pad(m+1)}-01`, me = `${y}-${pad(m+1)}-31`;
+  return start <= me && (end || start) >= ms;
+}
+
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.hidden = false;
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.hidden = true, 3200);
+}
+
+/* ---------- storage ---------- */
+
+async function save(coll, item){
+  const body = {...item}; const id = body.id || uid(); delete body.id;
+  try {
+    const r = await fetch(`/api/${coll}/${encodeURIComponent(id)}`, {method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+    if (!r.ok) throw new Error(r.status);
+    const saved = await r.json();
+    const i = S[coll].findIndex(x => x.id === id);
+    if (i >= 0) S[coll][i] = saved; else S[coll].push(saved);
+    render();
+  } catch { toast('Could not save. Check your connection and try again.'); return null; }
+  return id;
+}
+async function remove(coll, id){
+  try { const r = await fetch(`/api/${coll}/${encodeURIComponent(id)}`, {method:'DELETE'}); if (!r.ok) throw new Error(r.status); }
+  catch { toast('Could not delete. Try again in a moment.'); return; }
+  S[coll] = S[coll].filter(x => x.id !== id); render();
+}
+
+async function load(){
+  const r = await fetch('/api/data', {headers:{'Accept':'application/json'}});
+  if (!r.ok) throw new Error('load ' + r.status);
+  const d = await r.json();
+  COLLS.forEach(c => S[c] = d[c] || []);
+  version = d.version;
+}
+async function boot(){
+  render();
+  try { const r = await fetch('/api/me'); if (r.ok){ const m = await r.json(); me = {id: m.email || null, name: m.email || ''}; } } catch {}
+  try { await load(); mode = 'db'; $('#mode').hidden = true; }
+  catch { mode = 'db'; const m = $('#mode'); m.hidden = false; m.textContent = 'Could not load events. Check your connection and reload the page.'; }
+  render();
+  // Pick up other people's changes: a cheap version check every 20 seconds and whenever the tab comes back.
+  const check = async () => {
+    try { const r = await fetch('/api/version'); if (!r.ok) return; const v = (await r.json()).version;
+      if (v !== version){ await load(); render(); } } catch {}
+  };
+  setInterval(() => { if (!document.hidden) check(); }, 20000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) check(); });
+}
+
+/* ---------- filtering ---------- */
+function filtered(){
+  const q = ui.q.trim().toLowerCase();
+  return S.events.filter(e => {
+    if (ui.type && e.type !== ui.type) return false;
+    if (ui.status && e.status !== ui.status) return false;
+    if (ui.prog && !(e.programmeIds||[]).includes(ui.prog)) return false;
+    if (ui.season && !(e.seasonIds||[]).includes(ui.season)) return false;
+    if (ui.brand && !(e.brandIds||[]).includes(ui.brand)) return false;
+    if (q){
+      const hay = [e.title,e.location,e.region,e.owner,e.summary,TYPE[e.type]?.name,...names('programmes',e.programmeIds),...names('products',e.productIds),...names('brands',e.brandIds)].join(' ').toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  }).sort((a,b) => (a.start||'9999').localeCompare(b.start||'9999') || (a.title||'').localeCompare(b.title||''));
+}
+
+/* ---------- rendering ---------- */
+const VIEWS = [['calendar','Calendar'],['year','Year planner'],['list','Events'],['brands','Brands'],['programmes','National Programmes'],['products','Products']];
+
+function render(){
+  applyBrand(); resolvePeople();
+  $('#tabs').innerHTML = VIEWS.map(([k,l]) => `<button data-act="view" data-v="${k}" aria-current="${ui.view===k}">${l}</button>`).join('');
+  renderFilters();
+  const v = $('#view');
+  if (mode === 'loading'){ return; }
+  v.innerHTML = ({calendar:viewCalendar, year:viewYear, list:viewList, brands:viewBrands, programmes:viewProgrammes, products:viewProducts}[ui.view] || viewCalendar)();
+  renderSheet();
+}
+
+function renderFilters(){
+  const showF = ['calendar','list','year'].includes(ui.view);
+  const f = $('#filters');
+  if (!showF){ f.innerHTML = ''; f.hidden = true; return; }
+  f.hidden = false;
+  const active = document.activeElement && document.activeElement.id === 'fq';
+  const n = filtered().length;
+  f.innerHTML = `
+    <input id="fq" type="search" placeholder="Search events, places, products…" value="${esc(ui.q)}" aria-label="Search events">
+    ${S.brands.length ? `<select id="fbrand" aria-label="Brand"><option value="">All brands</option>${sortedBrands().map(b => `<option value="${b.id}" ${ui.brand===b.id?'selected':''}>${esc(b.name)}</option>`).join('')}</select>` : ''}
+    <select id="ftype" aria-label="Event type"><option value="">All types</option>${TYPES.map(t => `<option value="${t.id}" ${ui.type===t.id?'selected':''}>${esc(t.name)}</option>`).join('')}</select>
+    <select id="fprog" aria-label="National Programme"><option value="">All programmes</option>${S.programmes.map(p => `<option value="${p.id}" ${ui.prog===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>
+    <select id="fseason" aria-label="Production calendar"><option value="">All seasons</option>${S.seasons.map(p => `<option value="${p.id}" ${ui.season===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>
+    <select id="fstatus" aria-label="Status"><option value="">Any status</option>${STATUSES.map(s => `<option ${ui.status===s?'selected':''}>${s}</option>`).join('')}</select>
+    <span class="count num">${n} event${n===1?'':'s'}</span>`;
+  if (active){ const i = $('#fq'); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }
+}
+
+function viewCalendar(){
+  const {y, m} = ui;
+  const first = new Date(y, m, 1);
+  const start = new Date(y, m, 1 - ((first.getDay()+6)%7));
+  const last = new Date(y, m+1, 0);
+  const cells = Math.ceil((((first.getDay()+6)%7) + last.getDate())/7)*7;
+  const evs = filtered();
+  let html = '';
+  for (let i = 0; i < cells; i++){
+    const d = new Date(start.getFullYear(), start.getMonth(), start.getDate()+i);
+    const ds = iso(d);
+    const on = evs.filter(e => e.start && e.start <= ds && endOf(e) >= ds);
+    const isMon = d.getDay() === 1;
+    html += `<div class="day ${d.getMonth()!==m?'out':''} ${ds===today?'today':''}">
+      <div class="dn">${d.getDate()}<button data-act="new-event" data-date="${ds}" aria-label="Add event on ${fmt(ds)}" title="Add event">+</button></div>
+      ${on.map(e => { const T = TYPE[e.type]||TYPE.other; const cont = e.start !== ds && !isMon; return `<button class="ev ${cont?'cont':''} ${esc(e.status||'')}" style="--c:${T.c}" data-act="open" data-id="${e.id}" title="${esc(e.title)} · ${esc(T.name)}">${cont?'↳ ':''}${esc(e.title)}</button>`; }).join('')}
+    </div>`;
+  }
+  const seasons = S.seasons.filter(s => seasonActive(s, m+1));
+  const progs = S.programmes.filter(p => overlapsMonth(p.start, p.end, y, m));
+  const ctx = (seasons.length || progs.length) ? `<div class="context">
+      ${progs.length ? `<span class="lbl">Programmes</span>${progs.map(p => `<span class="band" style="--c:${esc(p.colour||SWATCH[0])}">${esc(p.name)}</span>`).join('')}` : ''}
+      ${seasons.length ? `<span class="lbl" style="margin-left:8px">Production calendar</span>${seasons.map(s => `<span class="band" style="--c:${esc(s.colour||SWATCH[1])}">${esc(s.name)}${s.species?` · ${esc(s.species)}`:''}</span>`).join('')}` : ''}
+    </div>` : '';
+  return `
+    <div class="calhead">
+      <h2>${MONTHS[m]} ${y}</h2>
+      <button class="btn sm" data-act="mprev" aria-label="Previous month">←</button>
+      <button class="btn sm" data-act="mtoday">Today</button>
+      <button class="btn sm" data-act="mnext" aria-label="Next month">→</button>
+      <span class="spacer" style="flex:1"></span>
+      <button class="btn sm" data-act="print-month">Print month</button>
+    </div>
+    ${ctx}
+    <div class="calscroll"><div class="cal">
+      ${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d => `<div class="dow">${d}</div>`).join('')}
+      ${html}
+    </div></div>
+    ${S.events.length ? '' : `<div class="empty" style="margin-top:14px"><strong>No events yet</strong>Click <b>+ New event</b>, or the + on any day, to add your first A&amp;P show, roadshow or training day.</div>`}
+    <div class="legend">${TYPES.map(t => `<span><span class="dot" style="--c:${t.c}"></span>${esc(t.name)}</span>`).join('')}</div>`;
+}
+
+function viewYear(){
+  const y = ui.y, evs = filtered();
+  const head = `<div></div>${MON.map((n,i) => `<div class="mh" data-act="gomonth" data-m="${i}">${n}</div>`).join('')}`;
+  const bandRow = (label, colour, act, id, activeFn) => {
+    const on = MON.map((_,i) => activeFn(i));
+    return `<div class="rl"><span class="dot" style="--c:${esc(colour)}"></span><button data-act="${act}" data-id="${id}">${label}</button></div>` +
+      on.map((a,i) => `<div class="yb">${a ? `<i class="${!on[i-1]?'s':''} ${!on[i+1]?'e':''}" style="--c:${esc(colour)}"></i>` : ''}</div>`).join('');
+  };
+  const seasonRows = S.seasons.length ? S.seasons.map(s => bandRow(esc(s.name) + (s.species?` <span style="color:var(--muted)">· ${esc(s.species)}</span>`:''), s.colour||SWATCH[1], 'edit-season', s.id, i => seasonActive(s, i+1))).join('')
+    : `<div style="grid-column:1/-1;color:var(--muted)">No seasons yet. Add calving, mating, lambing and other periods so events line up against the farming year.</div>`;
+  const progRows = S.programmes.length ? S.programmes.map(p => bandRow(esc(p.name), p.colour||SWATCH[0], 'open-prog', p.id, i => overlapsMonth(p.start, p.end, y, i))).join('')
+    : `<div style="grid-column:1/-1;color:var(--muted)">No National Programmes yet.</div>`;
+  const typeRows = TYPES.map(t => {
+    const counts = MON.map((_,i) => evs.filter(e => e.type === t.id && overlapsMonth(e.start, endOf(e), y, i)).length);
+    if (!counts.some(Boolean)) return '';
+    return `<div class="rl"><span class="dot" style="--c:${t.c}"></span>${esc(t.name)}</div>` + counts.map((c,i) => `<div class="yc">${c ? `<button style="--c:${t.c}" data-act="gomonth" data-m="${i}" title="${c} in ${MONTHS[i]}">${c}</button>` : ''}</div>`).join('');
+  }).join('') || `<div style="grid-column:1/-1;color:var(--muted)">No events in ${y} match the filters.</div>`;
+  return `
+    <div class="calhead">
+      <h2>${y}</h2>
+      <button class="btn sm" data-act="yprev" aria-label="Previous year">←</button>
+      <button class="btn sm" data-act="ynext" aria-label="Next year">→</button>
+      <span class="spacer" style="flex:1"></span>
+      <button class="btn sm" data-act="new-season">+ Season</button>
+      <button class="btn sm" data-act="print-year">Print year</button>
+    </div>
+    <div class="yscroll"><div class="year">
+      ${head}
+      <div class="sec">Production animal calendar</div>${seasonRows}
+      <div class="sec">National Programmes</div>${progRows}
+      <div class="sec">Events by type</div>${typeRows}
+    </div></div>`;
+}
+
+function eventRow(e){
+  const progs = names('programmes', e.programmeIds), prods = names('products', e.productIds);
+  return `<div class="row" data-act="open" data-id="${e.id}" tabindex="0" role="button">
+    <div class="when">${esc(fmtRange(e.start, e.end))}</div>
+    <div style="min-width:0"><div class="t">${esc(e.title)}${sampleTag(e)}</div>
+      <div class="meta">${e.location?`<span>${esc(e.location)}</span>`:''}${e.owner?`<span>Lead: ${esc(e.owner)}</span>`:''}${progs.length?`<span>${esc(progs.join(', '))}</span>`:''}${prods.length?`<span>${prods.length} product${prods.length>1?'s':''}</span>`:''}${enteredBy(e)?`<span>Added by ${esc(enteredBy(e))}</span>`:''}</div></div>
+    <div class="right">${(e.brandIds||[]).map(id => byId('brands',id)).filter(Boolean).map(bmark).join('')}${typeChip(e.type)}<span class="pill ${esc(e.status||'')}">${esc(e.status||'Idea')}</span></div>
+  </div>`;
+}
+
+function viewList(){
+  const evs = filtered();
+  const head = `<div class="sechead"><div><h2>Events</h2><p>Every event in one list. Open one to see its summary, planning detail and full brief.</p></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" data-act="csv">Download CSV</button><button class="btn sm" data-act="print-list">Print list</button></div></div>`;
+  if (!evs.length) return head + `<div class="empty"><strong>${S.events.length?'Nothing matches these filters':'No events yet'}</strong>${S.events.length?'Clear a filter to see more.':'Add your first event with <b>+ New event</b>.'}</div>`;
+  const groups = {};
+  evs.forEach(e => { const k = e.start ? e.start.slice(0,7) : 'tbc'; (groups[k] ||= []).push(e); });
+  return head + `<div class="list">${Object.entries(groups).map(([k, list]) => `<section class="mgroup"><h3>${k==='tbc'?'Date to be set':`${MONTHS[+k.slice(5,7)-1]} ${k.slice(0,4)}`}</h3><div class="rows">${list.map(eventRow).join('')}</div></section>`).join('')}</div>`;
+}
+
+function evLinks(list){
+  if (!list.length) return `<p class="none">No events linked yet.</p>`;
+  return `<ul>${list.map(e => `<li><button data-act="open" data-id="${e.id}"><span class="dot" style="--c:${(TYPE[e.type]||TYPE.other).c}"></span><span class="lt">${esc(e.title)}</span><span class="num" style="color:var(--muted);font-size:12px">${esc(e.start?fmt(e.start):'tbc')}</span></button></li>`).join('')}</ul>`;
+}
+const sortEv = l => l.slice().sort((a,b) => (a.start||'9').localeCompare(b.start||'9'));
+
+function viewProgrammes(){
+  const head = `<div class="sechead"><div><h2>National Programmes</h2><p>Each programme pulls together the events and products that run under it.</p></div><button class="btn primary" data-act="new-prog">+ Programme</button></div>`;
+  if (!S.programmes.length) return head + `<div class="empty"><strong>No programmes yet</strong>Add a National Programme, then link events to it from the event form.</div>`;
+  return head + `<div class="grid">${S.programmes.slice().sort((a,b)=>(a.start||'').localeCompare(b.start||'')).map(p => {
+    const evs = sortEv(S.events.filter(e => (e.programmeIds||[]).includes(p.id)));
+    const prods = [...new Set([...(p.productIds||[]), ...evs.flatMap(e => e.productIds||[])])];
+    return `<article class="card">
+      <h3><span class="dot" style="--c:${esc(p.colour||SWATCH[0])};width:10px;height:10px"></span>${esc(p.name)}${sampleTag(p)}</h3>
+      <div class="sub">${p.start?esc(fmtRange(p.start,p.end)):'Dates to be set'}${p.lead?` · Lead: ${esc(p.lead)}`:''}</div>
+      ${(p.brandIds||[]).length?`<div class="tags">${brandChips(p.brandIds)}</div>`:''}
+      ${p.description?`<p>${esc(p.description)}</p>`:''}
+      <div class="k">Events (${evs.length})</div>${evLinks(evs)}
+      <div class="k">Products</div>${prods.length?`<div class="tags">${names('products',prods).map(n=>`<span class="chip">${esc(n)}</span>`).join('')}</div>`:'<p class="none">None linked.</p>'}
+      <div class="acts"><button class="btn sm" data-act="edit-prog" data-id="${p.id}">Edit</button><button class="btn sm" data-act="print-prog" data-id="${p.id}">Print summary</button><button class="btn sm ghost" data-act="filter-prog" data-id="${p.id}">Show on calendar</button></div>
+    </article>`;
+  }).join('')}</div>`;
+}
+
+function brandStats(b){
+  const evs = sortEv(S.events.filter(e => (e.brandIds||[]).includes(b.id)));
+  return { evs, up: evs.filter(e => endOf(e) >= today && e.status !== 'Cancelled'),
+    progs: S.programmes.filter(p => (p.brandIds||[]).includes(b.id)),
+    prods: S.products.filter(p => (p.brandIds||[]).includes(b.id)) };
+}
+function viewBrands(){
+  const head = `<div class="sechead"><div><h2>Brands</h2><p>What each brand has on: events, National Programmes and products marked against it. Mark brands on any event, programme or product form.</p></div><button class="btn primary" data-act="new-brand">+ Brand</button></div>`;
+  if (!S.brands.length) return head + `<div class="empty"><strong>No brands yet</strong>Add Comhla and each of its brands, with their logos, then mark events against them.</div>`;
+  const unmarked = S.events.filter(e => !(e.brandIds||[]).length).length;
+  return head + `<div class="grid">${sortedBrands().map(b => {
+    const st = brandStats(b);
+    return `<article class="card">
+      <div class="logo">${logoUrl(b) ? `<img src="${esc(logoUrl(b))}" alt="${esc(b.name)} logo">` : `<span class="bmark" style="--c:${esc(b.colour||'#7b8a84')}">${esc(initials(b.name))}</span>`}</div>
+      <h3>${esc(b.name)}${b.primary?' <span class="pill">Group</span>':''}</h3>
+      ${b.notes?`<p>${esc(b.notes)}</p>`:''}
+      <div class="stats"><div><b>${st.up.length}</b><span>Upcoming</span></div><div><b>${st.evs.length}</b><span>All events</span></div><div><b>${st.progs.length}</b><span>Programmes</span></div><div><b>${st.prods.length}</b><span>Products</span></div></div>
+      <div class="k">Upcoming events</div>${evLinks(st.up.slice(0,8))}${st.up.length>8?`<p class="sub">and ${st.up.length-8} more</p>`:''}
+      ${st.progs.length?`<div class="k">National Programmes</div><div class="tags">${st.progs.map(g=>`<span class="chip"><span class="dot" style="--c:${esc(g.colour||SWATCH[0])}"></span>${esc(g.name)}</span>`).join('')}</div>`:''}
+      ${st.prods.length?`<div class="k">Products</div><div class="tags">${st.prods.map(g=>`<span class="chip">${esc(g.name)}</span>`).join('')}</div>`:''}
+      <div class="acts"><button class="btn sm" data-act="edit-brand" data-id="${b.id}">Edit</button><button class="btn sm" data-act="print-brand" data-id="${b.id}">Print summary</button><button class="btn sm ghost" data-act="filter-brand" data-id="${b.id}">Show events</button></div>
+    </article>`;
+  }).join('')}</div>${unmarked?`<p class="sub" style="color:var(--muted);margin-top:12px">${unmarked} event${unmarked>1?'s have':' has'} no brand marked yet.</p>`:''}`;
+}
+
+function viewProducts(){
+  const head = `<div class="sechead"><div><h2>Products</h2><p>Products featured at events, and where each one is showing up.</p></div><button class="btn primary" data-act="new-prod">+ Product</button></div>`;
+  if (!S.products.length) return head + `<div class="empty"><strong>No products yet</strong>Add the products you promote, then link them to events.</div>`;
+  return head + `<div class="grid">${S.products.slice().sort((a,b)=>(a.name||'').localeCompare(b.name||'')).map(p => {
+    const evs = sortEv(S.events.filter(e => (e.productIds||[]).includes(p.id)));
+    const progs = S.programmes.filter(g => (g.productIds||[]).includes(p.id));
+    const upcoming = evs.filter(e => endOf(e) >= today).length;
+    return `<article class="card">
+      <h3>${esc(p.name)}${sampleTag(p)}</h3>
+      <div class="sub">${[p.category,p.species].filter(Boolean).map(esc).join(' · ') || 'No category set'}</div>
+      ${(p.brandIds||[]).length?`<div class="tags">${brandChips(p.brandIds)}</div>`:''}
+      ${p.notes?`<p>${esc(p.notes)}</p>`:''}
+      <div class="k">Events (${evs.length}, ${upcoming} upcoming)</div>${evLinks(evs)}
+      ${progs.length?`<div class="k">Programmes</div><div class="tags">${progs.map(g=>`<span class="chip"><span class="dot" style="--c:${esc(g.colour||SWATCH[0])}"></span>${esc(g.name)}</span>`).join('')}</div>`:''}
+      <div class="acts"><button class="btn sm" data-act="edit-prod" data-id="${p.id}">Edit</button></div>
+    </article>`;
+  }).join('')}</div>`;
+}
+
+/* ---------- sheet (detail + forms) ---------- */
+function field(label, val){ return `<div><div class="k">${label}</div><div class="v">${val ? esc(val) : '<span class="none">Not set</span>'}</div></div>`; }
+function text(label, val){ return `<div class="block"><div class="k">${label}</div>${val ? `<p class="txt">${esc(val)}</p>` : '<p class="none" style="margin:0">Not written yet</p>'}</div>`; }
+
+function detail(e){
+  const T = TYPE[e.type]||TYPE.other;
+  const progs = (e.programmeIds||[]).map(id => byId('programmes',id)).filter(Boolean);
+  const prods = (e.productIds||[]).map(id => byId('products',id)).filter(Boolean);
+  const seas = (e.seasonIds||[]).map(id => byId('seasons',id)).filter(Boolean);
+  const lv = ui.lvl;
+  let body = '';
+  if (lv === 'summary') body = `
+    <div class="facts">${field('When', fmtRange(e.start,e.end))}${field('Where', e.location)}${field('Region', e.region)}${field('Event lead', e.owner)}</div>
+    <div class="block"><div class="k">Brands</div>${(e.brandIds||[]).length ? `<div class="tags">${brandChips(e.brandIds)}</div>` : '<p class="none" style="margin:0">No brand marked</p>'}</div>
+    ${text('Summary', e.summary)}
+    <p class="sub" style="margin:0;color:var(--muted);font-size:12px">${enteredBy(e) ? `Added by ${esc(enteredBy(e))}${e.createdAt?` on ${esc(fmt(e.createdAt.slice(0,10)))}`:''}` : 'Added before entry tracking'}${e.updatedBy && e.updatedBy !== e.createdBy ? ` · last edited by ${esc(personName(e.updatedBy))}` : ''}</p>`;
+  if (lv === 'planning') body = `
+    <div class="facts">${field('Audience', e.audience)}${field('Expected attendance', e.attendance)}${field('Budget', e.budget)}${field('Status', e.status||'Idea')}</div>
+    <div class="block"><div class="k">National Programmes</div>${progs.length?`<div class="tags">${progs.map(p=>`<span class="chip"><span class="dot" style="--c:${esc(p.colour||SWATCH[0])}"></span>${esc(p.name)}</span>`).join('')}</div>`:'<p class="none" style="margin:0">None linked</p>'}</div>
+    <div class="block"><div class="k">Products featured</div>${prods.length?`<div class="tags">${prods.map(p=>`<span class="chip">${esc(p.name)}</span>`).join('')}</div>`:'<p class="none" style="margin:0">None linked</p>'}</div>
+    <div class="block"><div class="k">Production animal calendar</div>${seas.length?`<div class="tags">${seas.map(s=>`<span class="chip"><span class="dot" style="--c:${esc(s.colour||SWATCH[1])}"></span>${esc(s.name)}</span>`).join('')}</div>`:'<p class="none" style="margin:0">No seasons tagged</p>'}</div>`;
+  if (lv === 'brief') body = `
+    ${text('Objectives', e.objectives)}${text('Key messages', e.keyMessages)}${text('Logistics and setup', e.logistics)}${text('Run sheet', e.runSheet)}${text('Contacts', e.contacts)}${text('Notes', e.notes)}`;
+  const armed = ui.armed === e.id;
+  return `<div class="sheet-top"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${typeChip(e.type)}<span class="pill ${esc(e.status||'')}">${esc(e.status||'Idea')}</span>${sampleTag(e)}</div>
+      <button class="btn ghost sm" data-act="close" aria-label="Close">✕</button></div>
+    <h2>${esc(e.title)}</h2>
+    <div style="color:var(--muted)">${esc(fmtRange(e.start,e.end))}${e.location?` · ${esc(e.location)}`:''}</div>
+    <div class="lvl" role="tablist">${[['summary','Summary'],['planning','Planning'],['brief','Full brief']].map(([k,l]) => `<button role="tab" data-act="lvl" data-l="${k}" aria-current="${lv===k}">${l}</button>`).join('')}</div>
+    ${body}
+    <div class="acts">
+      <button class="btn primary" data-act="edit-event" data-id="${e.id}">Edit</button>
+      <button class="btn" data-act="print-brief" data-id="${e.id}">Print event brief</button>
+      <button class="btn" data-act="dup" data-id="${e.id}">Duplicate</button>
+      <span style="flex:1"></span>
+      <button class="btn danger ${armed?'armed':''}" data-act="del" data-coll="events" data-id="${e.id}">${armed?'Confirm delete':'Delete'}</button>
+    </div>`;
+}
+
+const inp = (name, label, val, type='text', cls='') => `<label class="${cls}">${label}<input id="f-${name}" name="${name}" type="${type}" value="${esc(val||'')}"></label>`;
+const area = (name, label, val, ph='') => `<label class="full">${label}<textarea id="f-${name}" name="${name}" placeholder="${esc(ph)}">${esc(val||'')}</textarea></label>`;
+const sel = (name, label, opts, val) => `<label>${label}<select id="f-${name}" name="${name}">${opts.map(([v,l]) => `<option value="${esc(v)}" ${v===val?'selected':''}>${esc(l)}</option>`).join('')}</select></label>`;
+const checks = (name, label, items, chosen, empty) => `<div class="checks"><span class="k">${label}</span>${items.length ? `<div class="opts">${items.map(i => `<label><input type="checkbox" name="${name}" value="${i.id}" ${(chosen||[]).includes(i.id)?'checked':''}>${esc(i.name)}</label>`).join('')}</div>` : `<span class="none" style="font-size:13px">${empty}</span>`}</div>`;
+const colourSel = (val) => `<label>Colour<select name="colour" id="f-colour">${SWATCH.map((c,i) => `<option value="${c}" ${c===val?'selected':''}>${['Paddock green','Ochre','Blue','Violet','Gold','Rose','Grass','Teal','Clay','Slate'][i]}</option>`).join('')}</select></label>`;
+
+function quickForm(e){
+  const who = me.id && me.id !== 'local' && me.id !== 'preview' ? `<div class="who">Entered by <b>${esc(me.id)}</b></div>` : `${inp('enteredBy','Your name',e.enteredBy,'text','full')}`;
+  return `<div class="sheet-top"><h2>Add an event</h2><button class="btn ghost sm" data-act="close" aria-label="Close">✕</button></div>
+  <p style="margin:0;color:var(--muted)">The basics are enough to get it on the calendar. You can add planning detail and the full brief later.</p>
+  <form data-form="events" class="quick">
+    <input type="hidden" name="id" value="">
+    <fieldset><legend>Event</legend>
+      ${inp('title','Event name',e.title,'text','full')}
+      <div class="checks"><span class="k">Type</span><div class="opts">${TYPES.map(t => `<label><input type="radio" name="type" value="${t.id}" ${ (e.type||'ap')===t.id?'checked':''}><span class="dot" style="--c:${t.c}"></span>${esc(t.name)}</label>`).join('')}</div></div>
+      ${inp('start','Date (or first day)',e.start,'date')}
+      ${inp('end','Last day (if more than one)',e.end,'date')}
+      <div class="checks"><span class="k">Which brands are involved?</span>${S.brands.length ? `<div class="btiles">${sortedBrands().map(b => `<label title="${esc(b.name)}"><input type="checkbox" name="brandIds" value="${b.id}" ${(e.brandIds||[]).includes(b.id)?'checked':''}>${bmark(b)}<span>${esc(b.name)}</span></label>`).join('')}</div>` : '<span class="none" style="font-size:13px">No brands set up yet.</span>'}</div>
+      ${inp('owner','Clinic attending / lead',e.owner)}
+      ${inp('location','Town or venue',e.location)}
+      ${sel('status','Status',STATUSES.map(s=>[s,s]),e.status||'Planned')}
+      ${area('summary','Notes',e.summary,'Trade stand, prize donation, who is going, anything useful')}
+      ${who}
+    </fieldset>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" type="submit">Add event</button><button class="btn" type="button" data-act="close">Cancel</button><span style="flex:1"></span><button class="btn ghost" type="button" data-act="to-full">Add more detail →</button></div>
+  </form>`;
+}
+function eventForm(e){
+  return `<div class="sheet-top"><h2>${e.id?'Edit event':'New event'}</h2><button class="btn ghost sm" data-act="close" aria-label="Close">✕</button></div>
+  <form data-form="events">
+    <input type="hidden" name="id" value="${esc(e.id||'')}">
+    <fieldset><legend>Summary<small>what, when, where</small></legend>
+      ${inp('title','Event name',e.title,'text','full')}
+      ${sel('type','Type',TYPES.map(t=>[t.id,t.name]),e.type||'ap')}
+      ${sel('status','Status',STATUSES.map(s=>[s,s]),e.status||'Planned')}
+      ${inp('start','Start date',e.start,'date')}
+      ${inp('end','End date',e.end,'date')}
+      ${inp('location','Venue / location',e.location)}
+      ${inp('region','Region',e.region)}
+      ${inp('owner','Event lead',e.owner)}
+      ${checks('brandIds','Brands',sortedBrands(),e.brandIds,'Add brands in the Brands tab.')}
+      ${area('summary','Summary',e.summary,'One or two lines on what this event is')}
+    </fieldset>
+    <fieldset><legend>Planning<small>who, how much, what it links to</small></legend>
+      ${inp('audience','Audience',e.audience)}
+      ${inp('attendance','Expected attendance',e.attendance)}
+      ${inp('budget','Budget',e.budget)}
+      ${checks('programmeIds','National Programmes',S.programmes,e.programmeIds,'Add programmes in the National Programmes tab.')}
+      ${checks('productIds','Products featured',S.products.slice().sort((a,b)=>(a.name||'').localeCompare(b.name||'')),e.productIds,'Add products in the Products tab.')}
+      ${checks('seasonIds','Production animal calendar',S.seasons,e.seasonIds,'Add seasons in the Year planner.')}
+    </fieldset>
+    <fieldset><legend>Full brief<small>for the team on the day</small></legend>
+      ${area('objectives','Objectives',e.objectives)}
+      ${area('keyMessages','Key messages',e.keyMessages)}
+      ${area('logistics','Logistics and setup',e.logistics,'Site, stand size, power, freight, accommodation…')}
+      ${area('runSheet','Run sheet',e.runSheet,'7:00 Bump in\n9:00 Gates open…')}
+      ${area('contacts','Contacts',e.contacts)}
+      ${area('notes','Notes',e.notes)}
+    </fieldset>
+    <div style="display:flex;gap:8px"><button class="btn primary" type="submit">Save event</button><button class="btn" type="button" data-act="close">Cancel</button></div>
+  </form>`;
+}
+function progForm(p){
+  const armed = ui.armed === p.id;
+  return `<div class="sheet-top"><h2>${p.id?'Edit programme':'New National Programme'}</h2><button class="btn ghost sm" data-act="close" aria-label="Close">✕</button></div>
+  <form data-form="programmes"><input type="hidden" name="id" value="${esc(p.id||'')}">
+    <fieldset><legend>Programme</legend>
+      ${inp('name','Name',p.name,'text','full')}
+      ${inp('start','Runs from',p.start,'date')}${inp('end','Runs to',p.end,'date')}
+      ${inp('lead','Programme lead',p.lead)}${colourSel(p.colour)}
+      ${area('description','Description',p.description)}
+      ${checks('brandIds','Brands',sortedBrands(),p.brandIds,'Add brands in the Brands tab.')}
+      ${checks('productIds','Core products',S.products,p.productIds,'Add products in the Products tab.')}
+    </fieldset>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" type="submit">Save programme</button><button class="btn" type="button" data-act="close">Cancel</button>
+    ${p.id?`<span style="flex:1"></span><button class="btn danger ${armed?'armed':''}" type="button" data-act="del" data-coll="programmes" data-id="${p.id}">${armed?'Confirm delete':'Delete'}</button>`:''}</div>
+  </form>`;
+}
+function prodForm(p){
+  const armed = ui.armed === p.id;
+  return `<div class="sheet-top"><h2>${p.id?'Edit product':'New product'}</h2><button class="btn ghost sm" data-act="close" aria-label="Close">✕</button></div>
+  <form data-form="products"><input type="hidden" name="id" value="${esc(p.id||'')}">
+    <fieldset><legend>Product</legend>
+      ${inp('name','Product name',p.name,'text','full')}
+      ${inp('category','Category',p.category)}${inp('species','Species',p.species)}
+      ${checks('brandIds','Brand',sortedBrands(),p.brandIds,'Add brands in the Brands tab.')}
+      ${area('notes','Notes',p.notes)}
+    </fieldset>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" type="submit">Save product</button><button class="btn" type="button" data-act="close">Cancel</button>
+    ${p.id?`<span style="flex:1"></span><button class="btn danger ${armed?'armed':''}" type="button" data-act="del" data-coll="products" data-id="${p.id}">${armed?'Confirm delete':'Delete'}</button>`:''}</div>
+  </form>`;
+}
+let pendingLogo;
+function brandForm(b){
+  const armed = ui.armed === b.id;
+  pendingLogo = undefined;
+  const url = logoUrl(b);
+  return `<div class="sheet-top"><h2>${b.id?'Edit brand':'New brand'}</h2><button class="btn ghost sm" data-act="close" aria-label="Close">✕</button></div>
+  <form data-form="brands"><input type="hidden" name="id" value="${esc(b.id||'')}">
+    <fieldset><legend>Brand</legend>
+      ${inp('name','Brand name',b.name,'text','full')}
+      <label>Brand colour<input id="f-colour" name="colour" type="color" value="${esc(b.colour||'#1e6a55')}"></label>
+      <label style="flex-direction:row;align-items:center;gap:8px;align-self:end"><input type="checkbox" id="f-primary" name="primary" ${b.primary?'checked':''} style="width:auto">Group brand (shown in the header)</label>
+      <div class="upload"><span class="k" style="width:100%">Logo</span><span id="logoPrev">${url?`<img src="${esc(url)}" alt="">`:'<span class="none" style="font-size:13px">No logo yet</span>'}</span>
+        ${assets ? `<label class="btn sm" style="flex-direction:row;color:var(--ink)">Upload logo<input type="file" id="f-logo" accept="image/png,image/jpeg,image/svg+xml,image/webp" hidden></label>${url?'<button class="btn sm ghost" type="button" data-act="clear-logo">Remove</button>':''}` : '<span class="none" style="font-size:13px">Logo upload is available to people who can edit this app.</span>'}</div>
+      ${area('notes','Notes',b.notes,'Positioning, audience, who looks after it…')}
+    </fieldset>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" type="submit">Save brand</button><button class="btn" type="button" data-act="close">Cancel</button>
+    ${b.id?`<span style="flex:1"></span><button class="btn danger ${armed?'armed':''}" type="button" data-act="del" data-coll="brands" data-id="${b.id}">${armed?'Confirm delete':'Delete'}</button>`:''}</div>
+  </form>`;
+}
+function seasonForm(s){
+  const armed = ui.armed === s.id;
+  const months = MONTHS.map((n,i) => [String(i+1), n]);
+  return `<div class="sheet-top"><h2>${s.id?'Edit season':'New season'}</h2><button class="btn ghost sm" data-act="close" aria-label="Close">✕</button></div>
+  <p style="margin:0;color:var(--muted)">Seasons make up the production animal calendar. They repeat every year and can wrap over New Year.</p>
+  <form data-form="seasons"><input type="hidden" name="id" value="${esc(s.id||'')}">
+    <fieldset><legend>Season</legend>
+      ${inp('name','Name',s.name,'text','full')}
+      ${inp('species','Species',s.species)}${colourSel(s.colour)}
+      ${sel('startMonth','From',months,String(s.startMonth||''))}${sel('endMonth','To',months,String(s.endMonth||''))}
+      ${area('notes','Notes',s.notes,'Typical activities, product needs…')}
+    </fieldset>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" type="submit">Save season</button><button class="btn" type="button" data-act="close">Cancel</button>
+    ${s.id?`<span style="flex:1"></span><button class="btn danger ${armed?'armed':''}" type="button" data-act="del" data-coll="seasons" data-id="${s.id}">${armed?'Confirm delete':'Delete'}</button>`:''}</div>
+  </form>`;
+}
+
+function renderSheet(){
+  const host = $('#sheet'), sh = ui.sheet;
+  if (!sh){ host.innerHTML = ''; return; }
+  let inner = '';
+  if (sh.kind === 'event'){ const e = byId('events', sh.id); if (!e){ ui.sheet = null; host.innerHTML=''; return; } inner = detail(e); }
+  else if (sh.kind === 'form'){
+    // keep typed values when a live update re-renders: only build the form once
+    if (host.querySelector('form[data-form]') && host.dataset.key === sh.key) return;
+    inner = sh.quick ? quickForm(sh.data) : ({events:eventForm, programmes:progForm, products:prodForm, seasons:seasonForm, brands:brandForm})[sh.coll](sh.data);
+  }
+  host.dataset.key = sh.key || '';
+  const scroll = host.querySelector('.sheet')?.scrollTop || 0;
+  host.innerHTML = `<div class="scrim" data-act="scrim"><div class="sheet" role="dialog" aria-modal="true">${inner}</div></div>`;
+  host.querySelector('.sheet').scrollTop = scroll;
+}
+function openForm(coll, data, quick){ ui.armed = null; ui.sheet = {kind:'form', coll, data, quick: !!quick, key: coll + ':' + (data.id||'new') + ':' + uid()}; $('#sheet').innerHTML=''; renderSheet(); setTimeout(() => $('#sheet input:not([type=hidden])')?.focus(), 30); }
+
+/* ---------- printable documents ---------- */
+const PRINT_CSS = `@page{size:A4;margin:14mm}body{font:11pt/1.45 "Segoe UI",Helvetica,Arial,sans-serif;color:#1b2620;margin:0;padding:24px}h1{font-size:20pt;margin:0 0 4px}h2{font-size:13pt;margin:18px 0 6px;border-bottom:1.5px solid #1e6a55;padding-bottom:3px;color:#1e6a55}.sub{color:#5b6a61;margin-bottom:14px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #c9d2c7;padding:5px 7px;text-align:left;vertical-align:top;font-size:9.5pt}th{background:#eef2ec}.k{font-size:8pt;text-transform:uppercase;letter-spacing:.06em;color:#5b6a61}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 16px}.txt{white-space:pre-wrap;margin:2px 0 10px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.foot{margin-top:24px;font-size:8pt;color:#8a958e}.ev{font-size:8pt;padding:1px 3px;margin:1px 0;border-left:3px solid;background:#f4f6f2}.cal td{height:80px;width:14.28%}.cal .n{font-size:8pt;color:#5b6a61}.out{background:#f4f6f2}.band{display:inline-block;font-size:8.5pt;border-left:3px solid;padding:1px 6px;margin:0 4px 4px 0;background:#f4f6f2}.hdr{display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--b,#1e6a55);padding-bottom:8px;margin-bottom:14px}.hdr img{max-height:40px;max-width:180px}.hdr b{font-size:16pt}.hdr .sp{flex:1}@media print{body{padding:0}}`;
+function docHtml(title, body, landscape){
+  return `<!doctype html><html><head><meta charset="utf-8"><title>${esc(title)}</title><style>${PRINT_CSS}${landscape?'@page{size:A4 landscape}':''}</style></head><body>${body}<div class="foot">Comhla Events · printed ${fmt(today)}</div></body></html>`;
+}
+let logoCache = {};
+async function dataUri(b){
+  if (!b) return '';
+  const url = logoUrl(b); if (!url) return '';
+  if (url.startsWith('data:')) return url;
+  if (logoCache[url]) return logoCache[url];
+  try { const r = await fetch(url); const bl = await r.blob();
+    const u = await new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = rej; fr.readAsDataURL(bl); });
+    return (logoCache[url] = u); } catch { return ''; }
+}
+async function withLogos(html, extra){
+  const p = primaryBrand(); const u = await dataUri(p);
+  let head = `<div class="hdr">${u?`<img src="${u}" alt="">`:`<b style="color:${esc(p&&p.colour||'#1e6a55')}">${esc(p?p.name:'Comhla')}</b>`}${extra?`<span class="sp"></span>${extra}`:''}</div>`;
+  return html.replace('<body>', '<body>' + head);
+}
+async function download(filename, data){
+  if (filename.endsWith('.html')) return printDoc(data);
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([data], {type: filename.endsWith('.csv') ? 'text/csv' : 'application/octet-stream'}));
+  a.download = filename; document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+async function printDoc(html){
+  const p = primaryBrand(); html = html.replace('--b,#1e6a55', '--b,' + (p && p.colour || '#1e6a55'));
+  if (!html.includes('class="hdr"')) html = await withLogos(html);
+  const f = document.createElement('iframe');
+  f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0';
+  f.srcdoc = html;
+  f.onload = () => { setTimeout(() => { f.contentWindow.focus(); f.contentWindow.print(); setTimeout(() => f.remove(), 60000); }, 200); };
+  document.body.append(f);
+}
+function briefBody(e){
+  const T = TYPE[e.type]||TYPE.other;
+  const t = (l,v) => `<div class="k">${l}</div><p class="txt">${v?esc(v):'—'}</p>`;
+  return `<div class="k">${esc(T.name)} · ${esc(e.status||'Idea')}</div><h1>${esc(e.title)}</h1><div class="sub">${esc(fmtRange(e.start,e.end))}${e.location?' · '+esc(e.location):''}</div>
+    <div class="grid">${[['Region',e.region],['Event lead',e.owner],['Audience',e.audience],['Expected attendance',e.attendance],['Budget',e.budget],['National Programmes',names('programmes',e.programmeIds).join(', ')]].map(([l,v])=>`<div><div class="k">${l}</div>${v?esc(v):'—'}</div>`).join('')}</div>
+    <div style="margin-top:8px"><div class="k">Brands</div>${names('brands',e.brandIds).map(esc).join(', ')||'—'}</div>
+    <h2>Summary</h2><p class="txt">${e.summary?esc(e.summary):'—'}</p>
+    <h2>Products featured</h2><p class="txt">${names('products',e.productIds).map(esc).join(', ')||'—'}</p>
+    ${(e.seasonIds||[]).length?`<h2>Production animal calendar</h2><p class="txt">${names('seasons',e.seasonIds).map(esc).join(', ')}</p>`:''}
+    <h2>Brief</h2>${t('Objectives',e.objectives)}${t('Key messages',e.keyMessages)}${t('Logistics and setup',e.logistics)}${t('Run sheet',e.runSheet)}${t('Contacts',e.contacts)}${t('Notes',e.notes)}`;
+}
+function monthDoc(){
+  const {y,m} = ui; const first = new Date(y,m,1); const start = new Date(y,m,1-((first.getDay()+6)%7));
+  const last = new Date(y,m+1,0); const cells = Math.ceil((((first.getDay()+6)%7)+last.getDate())/7)*7;
+  const evs = filtered(); let rows = '';
+  for (let i=0;i<cells;i++){
+    if (i%7===0) rows += '<tr>';
+    const d = new Date(start.getFullYear(), start.getMonth(), start.getDate()+i), ds = iso(d);
+    const on = evs.filter(e => e.start && e.start <= ds && endOf(e) >= ds);
+    rows += `<td class="${d.getMonth()!==m?'out':''}"><div class="n">${d.getDate()}</div>${on.map(e=>`<div class="ev" style="border-color:${(TYPE[e.type]||TYPE.other).c}">${esc(e.title)}</div>`).join('')}</td>`;
+    if (i%7===6) rows += '</tr>';
+  }
+  const seasons = S.seasons.filter(s => seasonActive(s,m+1)), progs = S.programmes.filter(p => overlapsMonth(p.start,p.end,y,m));
+  const monthEvs = evs.filter(e => overlapsMonth(e.start, endOf(e), y, m));
+  return docHtml(`${MONTHS[m]} ${y} events`, `<h1>${MONTHS[m]} ${y}</h1><div class="sub">Comhla events calendar${filterNote()}</div>
+    ${progs.map(p=>`<span class="band" style="border-color:${esc(p.colour||SWATCH[0])}">${esc(p.name)}</span>`).join('')}${seasons.map(s=>`<span class="band" style="border-color:${esc(s.colour||SWATCH[1])}">${esc(s.name)}</span>`).join('')}
+    <table class="cal"><tr>${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`<th>${d}</th>`).join('')}</tr>${rows}</table>
+    <div style="margin-top:8px;font-size:8.5pt">${TYPES.map(t=>`<span style="margin-right:12px"><span class="dot" style="background:${t.c}"></span>${esc(t.name)}</span>`).join('')}</div>
+    ${monthEvs.length?`<h2>Events this month</h2>${listTable(monthEvs)}`:''}`, true);
+}
+function listTable(evs){
+  return `<table><tr><th>Dates</th><th>Event</th><th>Type</th><th>Location</th><th>Lead</th><th>Status</th><th>Brands</th><th>Products</th><th>Added by</th></tr>${evs.map(e=>`<tr><td>${esc(fmtRange(e.start,e.end))}</td><td>${esc(e.title)}</td><td>${esc((TYPE[e.type]||TYPE.other).name)}</td><td>${esc(e.location)}</td><td>${esc(e.owner)}</td><td>${esc(e.status||'Idea')}</td><td>${names('brands',e.brandIds).map(esc).join(', ')}</td><td>${names('products',e.productIds).map(esc).join(', ')}</td><td>${esc(enteredBy(e))}</td></tr>`).join('')}</table>`;
+}
+function filterNote(){
+  const p = [];
+  if (ui.type) p.push(TYPE[ui.type].name);
+  if (ui.prog) p.push(byId('programmes',ui.prog)?.name);
+  if (ui.season) p.push(byId('seasons',ui.season)?.name);
+  if (ui.status) p.push(ui.status);
+  if (ui.brand) p.push(byId('brands',ui.brand)?.name);
+  if (ui.q) p.push(`"${ui.q}"`);
+  return p.length ? ` · filtered: ${esc(p.filter(Boolean).join(', '))}` : '';
+}
+function yearDoc(){
+  const y = ui.y, evs = filtered();
+  const band = (label, colour, fn) => `<tr><td>${esc(label)}</td>${MON.map((_,i)=>`<td style="${fn(i)?`background:${colour}55`:''}"></td>`).join('')}</tr>`;
+  return docHtml(`${y} year planner`, `<h1>${y} year planner</h1><div class="sub">Production animal calendar, National Programmes and events${filterNote()}</div>
+    <table><tr><th style="width:22%"></th>${MON.map(n=>`<th>${n}</th>`).join('')}</tr>
+    <tr><th colspan="13">Production animal calendar</th></tr>${S.seasons.map(s=>band(s.name+(s.species?` (${s.species})`:''), s.colour||SWATCH[1], i=>seasonActive(s,i+1))).join('')}
+    <tr><th colspan="13">National Programmes</th></tr>${S.programmes.map(p=>band(p.name, p.colour||SWATCH[0], i=>overlapsMonth(p.start,p.end,y,i))).join('')}
+    <tr><th colspan="13">Events</th></tr>${TYPES.map(t=>{const c=MON.map((_,i)=>evs.filter(e=>e.type===t.id&&overlapsMonth(e.start,endOf(e),y,i)).length); return c.some(Boolean)?`<tr><td><span class="dot" style="background:${t.c}"></span>${esc(t.name)}</td>${c.map(n=>`<td style="text-align:center">${n||''}</td>`).join('')}</tr>`:'';}).join('')}
+    </table>
+    <h2>All ${y} events</h2>${listTable(evs.filter(e => e.start && (e.start.startsWith(String(y)) || endOf(e).startsWith(String(y)))))}`, true);
+}
+function progDoc(p){
+  const evs = sortEv(S.events.filter(e => (e.programmeIds||[]).includes(p.id)));
+  const prods = [...new Set([...(p.productIds||[]), ...evs.flatMap(e=>e.productIds||[])])];
+  return docHtml(p.name, `<div class="k">National Programme</div><h1>${esc(p.name)}</h1><div class="sub">${p.start?esc(fmtRange(p.start,p.end)):'Dates to be set'}${p.lead?' · Lead: '+esc(p.lead):''}</div>
+    ${p.description?`<p class="txt">${esc(p.description)}</p>`:''}
+    <h2>Products</h2><p>${names('products',prods).map(esc).join(', ')||'—'}</p>
+    <h2>Events (${evs.length})</h2>${evs.length?listTable(evs):'<p>No events linked yet.</p>'}`, true);
+}
+async function brandDoc(b){
+  const st = brandStats(b); const u = await dataUri(b);
+  const html = docHtml(b.name + ' events', `<h1>${esc(b.name)}</h1><div class="sub">Events, programmes and products · ${st.up.length} upcoming, ${st.evs.length} in total</div>
+    ${b.notes?`<p class="txt">${esc(b.notes)}</p>`:''}
+    <h2>Upcoming events</h2>${st.up.length?listTable(st.up):'<p>None scheduled.</p>'}
+    <h2>National Programmes</h2><p>${st.progs.map(g=>esc(g.name)).join(', ')||'—'}</p>
+    <h2>Products</h2><p>${st.prods.map(g=>esc(g.name)).join(', ')||'—'}</p>
+    ${st.evs.length>st.up.length?`<h2>Past events</h2>${listTable(st.evs.filter(e=>!st.up.includes(e)))}`:''}`, true);
+  return withLogos(html, u ? `<img src="${u}" alt="">` : '');
+}
+function csv(){
+  const cols = [['start','Start'],['end','End'],['title','Event'],['type','Type'],['status','Status'],['location','Location'],['region','Region'],['owner','Lead'],['audience','Audience'],['attendance','Attendance'],['budget','Budget'],['brands','Brands'],['programmes','National Programmes'],['products','Products'],['seasons','Production calendar'],['summary','Summary'],['enteredBy','Added by'],['createdAt','Added on']];
+  const q = v => `"${String(v??'').replace(/"/g,'""')}"`;
+  const rows = filtered().map(e => cols.map(([k]) => q(k==='type'?(TYPE[e.type]||TYPE.other).name : k==='brands'?names('brands',e.brandIds).join('; ') : k==='programmes'?names('programmes',e.programmeIds).join('; ') : k==='products'?names('products',e.productIds).join('; ') : k==='seasons'?names('seasons',e.seasonIds).join('; ') : k==='enteredBy'?enteredBy(e) : k==='createdAt'?(e.createdAt||'').slice(0,10) : e[k])).join(','));
+  return [cols.map(c=>q(c[1])).join(','), ...rows].join('\r\n');
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', async ev => {
+  const el = ev.target.closest('[data-act]'); if (!el) return;
+  const a = el.dataset.act, id = el.dataset.id;
+  if (a === 'scrim'){ if (ev.target === el){ ui.sheet = null; renderSheet(); } return; }
+  if (a !== 'del') ui.armed = null;
+  switch (a){
+    case 'view': ui.view = el.dataset.v; try{localStorage.setItem('ce.view',ui.view);}catch{} render(); break;
+    case 'mprev': if(--ui.m<0){ui.m=11;ui.y--;} render(); break;
+    case 'mnext': if(++ui.m>11){ui.m=0;ui.y++;} render(); break;
+    case 'mtoday': ui.m=now.getMonth(); ui.y=now.getFullYear(); render(); break;
+    case 'yprev': ui.y--; render(); break;
+    case 'ynext': ui.y++; render(); break;
+    case 'gomonth': ui.m=+el.dataset.m; ui.view='calendar'; render(); break;
+    case 'open': ui.sheet = {kind:'event', id}; ui.lvl='summary'; renderSheet(); break;
+    case 'lvl': ui.lvl = el.dataset.l; renderSheet(); break;
+    case 'close': ui.sheet = null; renderSheet(); break;
+    case 'new-event': openForm('events', {start: el.dataset.date || '', status:'Planned', type:'ap'}, true); break;
+    case 'to-full': { const f = el.closest('form'); const fd = new FormData(f); const d = {...(ui.sheet.data||{})};
+      for (const [k,v] of fd.entries()) if (k !== 'brandIds') d[k] = v; d.brandIds = fd.getAll('brandIds'); openForm('events', d); break; }
+    case 'edit-event': openForm('events', {...byId('events',id)}); break;
+    case 'dup': { const e = {...byId('events',id)}; ['id','sample','createdBy','createdAt','updatedBy','source','enteredBy'].forEach(k => delete e[k]); e.title = e.title + ' (copy)'; e.status = 'Idea'; openForm('events', e); break; }
+    case 'new-prog': openForm('programmes', {colour:SWATCH[0]}); break;
+    case 'edit-prog': case 'open-prog': openForm('programmes', {...byId('programmes',id)}); break;
+    case 'new-prod': openForm('products', {}); break;
+    case 'edit-prod': openForm('products', {...byId('products',id)}); break;
+    case 'new-brand': openForm('brands', {colour:'#1e6a55', primary: !S.brands.some(b => b.primary)}); break;
+    case 'edit-brand': openForm('brands', {...byId('brands',id)}); break;
+    case 'filter-brand': ui.brand = id; ui.view = 'list'; render(); break;
+    case 'clear-logo': pendingLogo = null; $('#logoPrev').innerHTML = '<span class="none" style="font-size:13px">Logo will be removed when you save</span>'; el.remove(); break;
+    case 'print-brand': { const b = byId('brands',id); download(`brand-${slug(b.name)}.html`, await brandDoc(b)); break; }
+    case 'new-season': openForm('seasons', {colour:SWATCH[1], startMonth:1, endMonth:2}); break;
+    case 'edit-season': openForm('seasons', {...byId('seasons',id)}); break;
+    case 'filter-prog': ui.prog = id; ui.view = 'calendar'; const p = byId('programmes',id); if (p && p.start){ const d = parse(p.start); ui.y=d.getFullYear(); ui.m=d.getMonth(); } render(); break;
+    case 'del':
+      if (ui.armed !== id){ ui.armed = id; if (ui.sheet && ui.sheet.kind==='form'){ $('#sheet').dataset.key=''; } renderSheet(); break; }
+      ui.armed = null; ui.sheet = null; renderSheet(); await remove(el.dataset.coll, id); toast('Deleted.'); break;
+    case 'print-brief': { const e = byId('events',id); download(`event-brief-${slug(e.title)}.html`, docHtml(e.title + ' brief', briefBody(e))); break; }
+    case 'print-month': download(`calendar-${ui.y}-${pad(ui.m+1)}.html`, monthDoc()); break;
+    case 'print-year': download(`year-planner-${ui.y}.html`, yearDoc()); break;
+    case 'print-list': download(`events-list-${today}.html`, docHtml('Events list', `<h1>Events</h1><div class="sub">Comhla events${filterNote()}</div>${listTable(filtered())}`, true)); break;
+    case 'print-prog': { const p = byId('programmes',id); download(`programme-${slug(p.name)}.html`, progDoc(p)); break; }
+    case 'csv': download(`comhla-events-${today}.csv`, csv()); break;
+  }
+});
+document.addEventListener('keydown', ev => {
+  if (ev.key === 'Escape' && ui.sheet){ ui.sheet = null; renderSheet(); }
+  if (ev.key === 'Enter' && ev.target.matches('.row[data-act]')) ev.target.click();
+});
+document.addEventListener('input', ev => {
+  if (ev.target.id === 'fq'){ ui.q = ev.target.value; clearTimeout(render._t); render._t = setTimeout(render, 150); }
+});
+document.addEventListener('change', async ev => {
+  if (ev.target.id === 'f-logo'){
+    const file = ev.target.files && ev.target.files[0]; if (!file || !assets) return;
+    const prev = $('#logoPrev'); prev.innerHTML = '<span class="none" style="font-size:13px">Uploading…</span>';
+    try { const r = await fetch('/api/logo', {method:'POST', headers:{'Content-Type': file.type}, body: file}); if (!r.ok) throw {code: r.status === 415 ? 'unsupported_type' : r.status === 413 ? 'too_large' : 'x'}; const j = await r.json(); pendingLogo = j.url; prev.innerHTML = `<img src="${esc(j.url)}" alt="">`; }
+    catch(e){ prev.innerHTML = '<span class="none" style="font-size:13px">Upload failed</span>'; toast(e && e.code === 'unsupported_type' ? 'Use a PNG, JPG, SVG or WebP image.' : e && e.code === 'too_large' ? 'That image is too large. Use one under 2 MB.' : 'Could not upload the logo. Try again.'); }
+    return;
+  }
+  const map = {ftype:'type', fprog:'prog', fseason:'season', fstatus:'status', fbrand:'brand'};
+  if (map[ev.target.id]){ ui[map[ev.target.id]] = ev.target.value; render(); }
+});
+document.addEventListener('submit', async ev => {
+  const f = ev.target.closest('form[data-form]'); if (!f) return;
+  ev.preventDefault();
+  const coll = f.dataset.form, fd = new FormData(f);
+  const base = ui.sheet && ui.sheet.data ? {...ui.sheet.data} : {};
+  const item = {...base};
+  for (const [k,v] of fd.entries()) if (!['programmeIds','productIds','seasonIds','brandIds'].includes(k)) item[k] = typeof v === 'string' ? v.trim() : v;
+  ['programmeIds','productIds','seasonIds','brandIds'].forEach(k => { if (f.querySelector(`[name="${k}"]`)) item[k] = fd.getAll(k); });
+  if (coll === 'seasons'){ item.startMonth = +item.startMonth; item.endMonth = +item.endMonth; }
+  if (coll === 'brands'){ item.primary = !!fd.get('primary'); if (pendingLogo !== undefined){ delete item.logoId; if (pendingLogo) item.logoUrl = pendingLogo; else delete item.logoUrl; } }
+  const nameKey = coll === 'events' ? 'title' : 'name';
+  if (!item[nameKey]){ toast('Give it a name before saving.'); f.querySelector(`[name="${nameKey}"]`)?.focus(); return; }
+  if (coll === 'events' && item.end && item.start && item.end < item.start){ toast('The end date is before the start date.'); return; }
+  if (!item.id) delete item.id;
+  delete item.sample;
+  const savedId = await save(coll, item);
+  if (!savedId) return;
+  if (coll === 'brands' && item.primary){ for (const o of S.brands.filter(b => b.primary && b.id !== savedId)) await save('brands', {...o, primary:false}); }
+  toast('Saved.');
+  ui.sheet = coll === 'events' ? {kind:'event', id:savedId} : null;
+  if (coll === 'events' && item.start){ const d = parse(item.start); ui.y = d.getFullYear(); ui.m = d.getMonth(); }
+  render(); renderSheet();
+});
+
+boot();
+})();
+</script>
+</body>
+</html>

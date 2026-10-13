@@ -1,0 +1,496 @@
+{
+ "events": [
+  {
+   "brandIds": [
+    "west-coast-vets",
+    "heartland"
+   ],
+   "end": "2026-10-17",
+   "notes": "Trade stand with Heartland Feeds",
+   "owner": "West Coast Vets Hokitika and Greymouth",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2026-10-16",
+   "status": "Planned",
+   "summary": "Clinic attending: West Coast Vets Hokitika and Greymouth. Trade stand with Heartland Feeds",
+   "title": "Agfest West Coast",
+   "type": "trade",
+   "id": "agfest-west-coast"
+  },
+  {
+   "brandIds": [
+    "vetlife"
+   ],
+   "end": "2026-10-31",
+   "notes": "Trade stand",
+   "owner": "Vetlife Ashburton",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2026-10-30",
+   "status": "Planned",
+   "summary": "Clinic attending: Vetlife Ashburton. Trade stand",
+   "title": "Ashburton A&P Show",
+   "type": "ap",
+   "id": "ashburton-a-p-show"
+  },
+  {
+   "brandIds": [
+    "vetlife"
+   ],
+   "end": "2027-01-23",
+   "notes": "Trade stand",
+   "owner": "Vetlife Banks Peninsula",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2027-01-23",
+   "status": "Planned",
+   "summary": "Clinic attending: Vetlife Banks Peninsula. Trade stand",
+   "title": "Banks Peninsula A&P Show",
+   "type": "ap",
+   "id": "banks-peninsula-a-p-show"
+  },
+  {
+   "brandIds": [
+    "totally-vets"
+   ],
+   "end": "2027-03-20",
+   "notes": "Trade stand - Masterpet apparently handled the stand booking and product logistics",
+   "owner": "Totally Vets Feilding",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2027-03-18",
+   "status": "Planned",
+   "summary": "Clinic attending: Totally Vets Feilding. Trade stand - Masterpet apparently handled the stand booking and product logistics",
+   "title": "Central District Fielddays",
+   "type": "trade",
+   "id": "central-district-fielddays"
+  },
+  {
+   "brandIds": [
+    "vetlife"
+   ],
+   "end": "2027-02-13",
+   "location": "Omakau",
+   "notes": "Trade stand",
+   "owner": "Vetlife Alexandra",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2027-02-13",
+   "status": "Planned",
+   "summary": "Clinic attending: Vetlife Alexandra. Trade stand",
+   "title": "Central Otago (Omakau) A&P Show",
+   "type": "ap",
+   "id": "central-otago-omakau-a-p-show"
+  },
+  {
+   "brandIds": [
+    "vetsouth"
+   ],
+   "end": "2027-02-06",
+   "notes": "Trade stand",
+   "owner": "VetSouth Gore",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2027-02-06",
+   "status": "Planned",
+   "summary": "Clinic attending: VetSouth Gore. Trade stand",
+   "title": "Gore A&P Show",
+   "type": "ap",
+   "id": "gore-a-p-show"
+  },
+  {
+   "audience": "Prize donation only",
+   "brandIds": [
+    "west-coast-vets"
+   ],
+   "end": "2027-02-06",
+   "location": "Reefton",
+   "notes": "Donation of prizes - No trade stand",
+   "owner": "West Coast Vets",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2027-02-06",
+   "status": "Planned",
+   "summary": "Clinic attending: West Coast Vets. Donation of prizes - No trade stand",
+   "title": "Inangahua (Reefton) A&P Show",
+   "type": "sponsorship",
+   "id": "inangahua-reefton-a-p-show"
+  },
+  {
+   "brandIds": [
+    "vetlife",
+    "selwyn-rakaia-vets"
+   ],
+   "end": "2027-04-10",
+   "notes": "Trade stand",
+   "owner": "Vetlife Oxford, Vetlife Dunsandel, Selwyn Rakaia Vets",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2027-04-10",
+   "status": "Planned",
+   "summary": "Clinic attending: Vetlife Oxford, Vetlife Dunsandel, Selwyn Rakaia Vets. Trade stand",
+   "title": "Malvern A&P Show",
+   "type": "ap",
+   "id": "malvern-a-p-show"
+  },
+  {
+   "brandIds": [
+    "vetlife"
+   ],
+   "end": "2026-11-08",
+   "notes": "Trade stand",
+   "owner": "Vetlife on Alabama",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2026-11-07",
+   "status": "Planned",
+   "summary": "Clinic attending: Vetlife on Alabama. Trade stand",
+   "title": "Marlborough A&P Show",
+   "type": "ap",
+   "id": "marlborough-a-p-show"
+  },
+  {
+   "brandIds": [
+    "vetlife"
+   ],
+   "end": "2027-03-21",
+   "notes": "Trade stand",
+   "owner": "Vetlife Methven",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2027-03-21",
+   "status": "Planned",
+   "summary": "Clinic attending: Vetlife Methven. Trade stand",
+   "title": "Methven A&P Show",
+   "type": "ap",
+   "id": "methven-a-p-show"
+  },
+  {
+   "brandIds": [
+    "vetlife"
+   ],
+   "end": "2027-02-27",
+   "owner": "Vetlife Oamaru",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2027-02-27",
+   "status": "Planned",
+   "summary": "Clinic attending: Vetlife Oamaru",
+   "title": "North Otago A&P Show",
+   "type": "ap",
+   "id": "north-otago-a-p-show"
+  },
+  {
+   "brandIds": [
+    "vetlife"
+   ],
+   "end": "2027-03-06",
+   "notes": "Trade stand",
+   "owner": "Vetlife on Alabama",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2027-03-06",
+   "status": "Planned",
+   "summary": "Clinic attending: Vetlife on Alabama. Trade stand",
+   "title": "Rai Valley A&P Show",
+   "type": "ap",
+   "id": "rai-valley-a-p-show"
+  },
+  {
+   "brandIds": [
+    "vetsouth"
+   ],
+   "end": "2026-11-29",
+   "location": "Balclutha",
+   "notes": "Trade stand",
+   "owner": "VetSouth Balclutha",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2026-11-28",
+   "status": "Planned",
+   "summary": "Clinic attending: VetSouth Balclutha. Trade stand",
+   "title": "South Otago (Balclutha) A&P Show",
+   "type": "ap",
+   "id": "south-otago-balclutha-a-p-show"
+  },
+  {
+   "audience": "Prize donation only",
+   "brandIds": [
+    "west-coast-vets"
+   ],
+   "end": "2027-02-28",
+   "notes": "Donation of prizes - No trade stand",
+   "owner": "West Coast Vets",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2027-02-28",
+   "status": "Planned",
+   "summary": "Clinic attending: West Coast Vets. Donation of prizes - No trade stand",
+   "title": "South Westland A&P Show",
+   "type": "sponsorship",
+   "id": "south-westland-a-p-show"
+  },
+  {
+   "brandIds": [
+    "vetlife"
+   ],
+   "end": "2027-03-06",
+   "notes": "Trade stand",
+   "owner": "Vetlife Temuka",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2027-03-06",
+   "status": "Planned",
+   "summary": "Clinic attending: Vetlife Temuka. Trade stand",
+   "title": "Temuka & Geraldine A&P Show",
+   "type": "ap",
+   "id": "temuka-geraldine-a-p-show"
+  },
+  {
+   "brandIds": [
+    "vetlife"
+   ],
+   "end": "2027-03-12",
+   "location": "Wanaka",
+   "notes": "Trade stand",
+   "owner": "Vetlife Wanaka",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2027-03-12",
+   "status": "Planned",
+   "summary": "Clinic attending: Vetlife Wanaka. Trade stand",
+   "title": "Upper Clutha (Wanaka) A&P Show",
+   "type": "ap",
+   "id": "upper-clutha-wanaka-a-p-show"
+  },
+  {
+   "brandIds": [
+    "vetsouth"
+   ],
+   "end": "2026-11-21",
+   "location": "Tapanui",
+   "notes": "Trade stand",
+   "owner": "VetSouth Tapanui",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2026-11-21",
+   "status": "Planned",
+   "summary": "Clinic attending: VetSouth Tapanui. Trade stand",
+   "title": "West Otago (Tapanui) A&P Show",
+   "type": "ap",
+   "id": "west-otago-tapanui-a-p-show"
+  },
+  {
+   "brandIds": [
+    "vetsouth"
+   ],
+   "end": "2027-01-16",
+   "notes": "Trade stand",
+   "owner": "VetSouth Winton",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2027-01-16",
+   "status": "Planned",
+   "summary": "Clinic attending: VetSouth Winton. Trade stand",
+   "title": "Winton A&P Show",
+   "type": "ap",
+   "id": "winton-a-p-show"
+  },
+  {
+   "brandIds": [
+    "vetsouth"
+   ],
+   "end": "2026-12-05",
+   "notes": "Trade stand",
+   "owner": "VetSouth Gore",
+   "seasonIds": [],
+   "source": "events Book2.xlsx",
+   "start": "2026-12-05",
+   "status": "Planned",
+   "summary": "Clinic attending: VetSouth Gore. Trade stand",
+   "title": "Wyndham A&P Show",
+   "type": "ap",
+   "id": "wyndham-a-p-show"
+  }
+ ],
+ "brands": [
+  {
+   "colour": "#5e95ad",
+   "name": "Agilis",
+   "id": "agilis",
+   "logoUrl": "/logos/agilis.png"
+  },
+  {
+   "colour": "#2f7fbf",
+   "name": "Buller Vets",
+   "id": "buller-vets",
+   "logoUrl": "/logos/buller-vets.png"
+  },
+  {
+   "colour": "#004a65",
+   "name": "Comhla Vet",
+   "primary": true,
+   "id": "comhla",
+   "logoUrl": "/logos/comhla-vet.png"
+  },
+  {
+   "colour": "#0e2764",
+   "name": "CHB",
+   "id": "equine",
+   "logoUrl": "/logos/equine-logo.png"
+  },
+  {
+   "colour": "#4c1052",
+   "name": "FirstVets",
+   "id": "firstvets",
+   "logoUrl": "/logos/first-vets.png"
+  },
+  {
+   "colour": "#4757a8",
+   "name": "Fortis",
+   "id": "fortis",
+   "logoUrl": "/logos/fortis.png"
+  },
+  {
+   "colour": "#6aa442",
+   "name": "Heartland Feeds",
+   "id": "heartland",
+   "logoUrl": "/logos/heartland.png"
+  },
+  {
+   "colour": "#09613e",
+   "name": "Levin & Horowhenua Vets",
+   "id": "levin-horowhenua-vets",
+   "logoUrl": "/logos/levin-horowhenua-vets.png"
+  },
+  {
+   "colour": "#8fa422",
+   "name": "Morrinsville Vets",
+   "id": "morrinsville-vets",
+   "logoUrl": "/logos/morrinsville-vets.png"
+  },
+  {
+   "colour": "#01a547",
+   "name": "Ōtaki Vets",
+   "id": "otaki-vets",
+   "logoUrl": "/logos/otaki-vets.png"
+  },
+  {
+   "colour": "#7b8a84",
+   "name": "Other group companies",
+   "notes": "Smaller companies in the group, such as DRL. Mark events here when they don't belong to a main brand.",
+   "id": "other-group"
+  },
+  {
+   "colour": "#6a7ea4",
+   "name": "Selwyn Rakaia Vets",
+   "id": "selwyn-rakaia-vets",
+   "logoUrl": "/logos/selwyn-rakaia-vets.png"
+  },
+  {
+   "colour": "#774571",
+   "name": "Tararua Breeding Centre",
+   "id": "tararua-breeding-centre",
+   "logoUrl": "/logos/tararua-breeding-centre.png"
+  },
+  {
+   "colour": "#123e67",
+   "name": "Tararua Veterinary Services",
+   "id": "tararua-veterinary-services",
+   "logoUrl": "/logos/tararua-veterinary-services.png"
+  },
+  {
+   "colour": "#4a3116",
+   "name": "TasVets",
+   "id": "tasvets",
+   "logoUrl": "/logos/tas-vets.png"
+  },
+  {
+   "colour": "#d83c42",
+   "name": "The Vet Group",
+   "id": "the-vet-group",
+   "logoUrl": "/logos/the-vet-group.png"
+  },
+  {
+   "colour": "#e7811c",
+   "name": "Totally Vets",
+   "id": "totally-vets",
+   "logoUrl": "/logos/totally-vets.png"
+  },
+  {
+   "colour": "#8a9a55",
+   "name": "Vetlife",
+   "id": "vetlife",
+   "logoUrl": "/logos/vetlife.png"
+  },
+  {
+   "colour": "#484849",
+   "name": "VetsOne",
+   "id": "vetsone",
+   "logoUrl": "/logos/vets-one.png"
+  },
+  {
+   "colour": "#148440",
+   "name": "VetSouth",
+   "id": "vetsouth",
+   "logoUrl": "/logos/vetsouth.png"
+  },
+  {
+   "colour": "#13873f",
+   "name": "West Coast Vets",
+   "id": "west-coast-vets",
+   "logoUrl": "/logos/west-coast-vets.png"
+  }
+ ],
+ "seasons": [
+  {
+   "colour": "#8a5a3c",
+   "endMonth": 10,
+   "name": "Calving",
+   "species": "Beef",
+   "startMonth": 8,
+   "id": "beef-calving"
+  },
+  {
+   "colour": "#2f6fd6",
+   "endMonth": 9,
+   "name": "Calving",
+   "notes": "Typical NZ spring-calving window. Edit to suit.",
+   "species": "Dairy",
+   "startMonth": 7,
+   "id": "dairy-calving"
+  },
+  {
+   "colour": "#c08a12",
+   "endMonth": 5,
+   "name": "Drying off",
+   "species": "Dairy",
+   "startMonth": 4,
+   "id": "dairy-dryoff"
+  },
+  {
+   "colour": "#c2571d",
+   "endMonth": 12,
+   "name": "Mating",
+   "species": "Dairy",
+   "startMonth": 10,
+   "id": "dairy-mating"
+  },
+  {
+   "colour": "#5e8f1e",
+   "endMonth": 10,
+   "name": "Lambing",
+   "species": "Sheep",
+   "startMonth": 8,
+   "id": "sheep-lambing"
+  },
+  {
+   "colour": "#7a4fd1",
+   "endMonth": 4,
+   "name": "Tupping",
+   "species": "Sheep",
+   "startMonth": 3,
+   "id": "sheep-tupping"
+  }
+ ]
+}
